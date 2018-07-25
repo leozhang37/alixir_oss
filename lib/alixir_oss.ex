@@ -1,0 +1,2 @@
+defmodule AlixirOss do
+end
