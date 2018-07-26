@@ -17,7 +17,6 @@ defmodule Alixir.OSS do
   """
 
   alias Alixir.OSS.Operation
-  alias Alixir.OSS.Utils
 
   @doc """
   Put object to OSS. Return an `Alixir.OSS.Operation` struct which
