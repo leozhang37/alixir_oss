@@ -56,7 +56,7 @@ defmodule Alixir.OSS do
       bucket: bucket,
       object_key: object_key,
       file: file,
-      headers: headers ++ oss_headers
+      headers: Keyword.merge(oss_headers, headers)
     }
   end
 
