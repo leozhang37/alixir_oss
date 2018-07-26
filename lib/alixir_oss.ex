@@ -20,8 +20,8 @@ defmodule Alixir.OSS do
   alias Alixir.OSS.Utils
 
   @doc """
-  Put object to OSS. Return an `AlixirOSS.Operation` struct which
-  could be passed to `AlixirOSS.Request.request` to perform the
+  Put object to OSS. Return an `Alixir.OSS.Operation` struct which
+  could be passed to `Alixir.request` to perform the
   request.
 
   ## Example
@@ -36,7 +36,7 @@ defmodule Alixir.OSS do
     String.t(),
     Enumerable.t(),
     Enumerable.t()
-  ) :: tuple()
+  ) :: %Alixir.OSS.Operation{http_method: :put}
   def put_object(bucket, object_key, file, oss_headers \\ []) when is_list(oss_headers) do
     gmt_now = Utils.gmt_now()
     signature = Utils.make_signature(
@@ -60,6 +60,42 @@ defmodule Alixir.OSS do
     }
   end
 
-  def delete_object do
+  @doc """
+  Delete object from OSS. Return an `Alixir.OSS.Operation` struct which
+  could be passed to `Alixir.request` to perform the
+  request.
+
+  ## Example
+
+    iex> operation = Alixir.OSS.delete_object("foo_bucket", "foo/bar.jpg")
+    ...> with %Alixir.OSS.Operation{http_method: :delete, bucket: "foo_bucket", object_key: "foo/bar.jpg",
+    ...>   headers: headers} when is_list(headers) <- operation, do: true
+    true
+  """
+  @spec delete_object(
+    String.t(),
+    Enumerable.t(),
+    Enumerable.t()
+  ) :: %Alixir.OSS.Operation{http_method: :delete}
+  def delete_object(bucket, object_key, oss_headers \\ []) when is_list(oss_headers) do
+    gmt_now = Utils.gmt_now()
+    signature = Utils.make_signature(
+      "DELETE",
+      gmt_now,
+      [],
+      "/#{bucket}/#{object_key}"
+    )
+
+    headers = [
+      "Authorization": "OSS #{Alixir.OSS.Env.oss_access_key_id}:#{signature}",
+      "Date": gmt_now
+    ]
+
+    %Operation{
+      http_method: :delete,
+      bucket: bucket,
+      object_key: object_key,
+      headers: Keyword.merge(oss_headers, headers)
+    }
   end
 end
