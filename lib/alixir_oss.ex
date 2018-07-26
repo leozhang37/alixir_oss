@@ -35,7 +35,7 @@ defmodule Alixir.OSS do
     String.t(),
     String.t(),
     Enumerable.t(),
-    Enumerable.t()
+    list()
   ) :: %Alixir.OSS.Operation{http_method: :put}
   def put_object(bucket, object_key, file, oss_headers \\ []) when is_list(oss_headers) do
     gmt_now = Utils.gmt_now()
@@ -75,7 +75,7 @@ defmodule Alixir.OSS do
   @spec delete_object(
     String.t(),
     Enumerable.t(),
-    Enumerable.t()
+    list()
   ) :: %Alixir.OSS.Operation{http_method: :delete}
   def delete_object(bucket, object_key, oss_headers \\ []) when is_list(oss_headers) do
     gmt_now = Utils.gmt_now()
