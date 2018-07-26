@@ -28,7 +28,7 @@ defmodule Alixir.OSS do
 
     iex> operation = Alixir.OSS.put_object("foo_bucket", "foo/bar.jpg", File.stream!("test/data/bar.jpg"), "X-OSS-Object-Acl": "public-read")
     ...> with %Alixir.OSS.Operation{http_method: :put, bucket: "foo_bucket", object_key: "foo/bar.jpg",
-    ...>   file: %File.Stream{path: "test/data/bar.jpg"}, headers: headers} when is_list(headers) <- operation, do: true
+    ...>   file: %File.Stream{path: "test/data/bar.jpg"}, oss_headers: oss_headers} when is_list(oss_headers) <- operation, do: true
     true
   """
   @spec put_object(
@@ -38,25 +38,12 @@ defmodule Alixir.OSS do
     list()
   ) :: %Alixir.OSS.Operation{http_method: :put}
   def put_object(bucket, object_key, file, oss_headers \\ []) when is_list(oss_headers) do
-    gmt_now = Utils.gmt_now()
-    signature = Utils.make_signature(
-      "PUT",
-      gmt_now,
-      [],
-      "/#{bucket}/#{object_key}"
-    )
-
-    headers = [
-      "Authorization": "OSS #{Alixir.OSS.Env.oss_access_key_id}:#{signature}",
-      "Date": gmt_now
-    ]
-
     %Operation{
       http_method: :put,
       bucket: bucket,
       object_key: object_key,
       file: file,
-      headers: Keyword.merge(oss_headers, headers)
+      oss_headers: oss_headers
     }
   end
 
@@ -69,7 +56,7 @@ defmodule Alixir.OSS do
 
     iex> operation = Alixir.OSS.delete_object("foo_bucket", "foo/bar.jpg")
     ...> with %Alixir.OSS.Operation{http_method: :delete, bucket: "foo_bucket", object_key: "foo/bar.jpg",
-    ...>   headers: headers} when is_list(headers) <- operation, do: true
+    ...>   oss_headers: oss_headers} when is_list(oss_headers) <- operation, do: true
     true
   """
   @spec delete_object(
@@ -78,24 +65,11 @@ defmodule Alixir.OSS do
     list()
   ) :: %Alixir.OSS.Operation{http_method: :delete}
   def delete_object(bucket, object_key, oss_headers \\ []) when is_list(oss_headers) do
-    gmt_now = Utils.gmt_now()
-    signature = Utils.make_signature(
-      "DELETE",
-      gmt_now,
-      [],
-      "/#{bucket}/#{object_key}"
-    )
-
-    headers = [
-      "Authorization": "OSS #{Alixir.OSS.Env.oss_access_key_id}:#{signature}",
-      "Date": gmt_now
-    ]
-
     %Operation{
       http_method: :delete,
       bucket: bucket,
       object_key: object_key,
-      headers: Keyword.merge(oss_headers, headers)
+      oss_headers: oss_headers
     }
   end
 end

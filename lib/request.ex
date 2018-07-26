@@ -15,9 +15,9 @@ defmodule Alixir.Request do
 
   @spec perform(%Request{}) :: {:ok, status_code, body} | {:error, status_code, reason}
   def perform(%Request{http_method: http_method, url: url, params: params, headers: headers, body: body})
-    when http_method in ~w{put delete}
+    when http_method in ~w{put delete}a
   do
-    with {:ok, %HTTPoison.Response{body: body, status_code: code}} <- HTTPoison.request(http_method, url, body, headers, params: params)
+    with {:ok, %HTTPoison.Response{body: body, status_code: code}} <- HTTPoison.request(http_method, url, body, headers, params: List.wrap(params))
     do
       {:ok, code, body}
     else
