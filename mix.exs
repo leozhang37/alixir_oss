@@ -29,7 +29,8 @@ defmodule AlixirOss.MixProject do
       {:httpoison, "~> 1.2.0"},
       {:timex, "~> 3.3"},
       {:mime, "~> 1.3.0"},
-      {:sweet_xml, "~> 0.6.5"}
+      {:sweet_xml, "~> 0.6.5"},
+      {:junit_formatter, ">= 0.0.0", only: :test}
     ]
   end
 
