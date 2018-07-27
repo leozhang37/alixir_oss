@@ -1,28 +1,49 @@
 defmodule AlixirOss.MixProject do
   use Mix.Project
 
+  @project_host "https://github.com/GreenNerd-Labs/alixir_oss"
+  @version "0.1.0"
+
   def project do
     [
       app: :alixir_oss,
-      version: "0.1.0",
-      elixir: "~> 1.6",
+      version: @version,
+      source_url: @project_host,
+      homepage_url: @project_host,
+      description: description(),
+      package: package(),
+      elixir: "~> 1.4",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:timex]
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
+      {:httpoison, "~> 1.2.0"},
+      {:timex, "~> 3.3"},
+      {:mime, "~> 1.3.0"},
+      {:sweet_xml, "~> 0.6.5"}
+    ]
+  end
+
+  defp description do
+    "Aliyun OSS adapter."
+  end
+
+  defp package do
+    [
+      name: :alixir_oss,
+      files: ["libs", "mix.exs", "README*", "MIT-LICENSE"],
+      maintainers: ["CptBreeza"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => @project_host}
     ]
   end
 end
