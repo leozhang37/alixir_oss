@@ -2,7 +2,6 @@ defmodule Alixir.OSS.Utils do
   @default_content_type "application/octet-stream"
 
   defdelegate gmt_now(), to: Alixir.Utils
-  defdelegate canonicalize_parameters(parameters), to: Alixir.Utils
 
   def make_signature(
     verb: verb, content_md5: content_md5, content_type: content_type,
@@ -26,5 +25,12 @@ defmodule Alixir.OSS.Utils do
       "." <> ext -> MIME.type(ext)
       _ -> @default_content_type
     end
+  end
+
+  defp canonicalize_parameters(parameters) do
+    parameters
+    |> Enum.map(fn {key, value} -> "#{key |> to_string() |> String.downcase()}:#{value}" end)
+    |> Enum.sort()
+    |> Enum.join("\n")
   end
 end

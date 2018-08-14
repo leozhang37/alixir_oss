@@ -1,5 +1,5 @@
 %{
-  "alixir_core": {:git, "https://github.com/GreenNerd-Labs/alixir_core.git", "7d4ec20bda1ab2d9e628dab45c6ed13571507616", [branch: "develop"]},
+  "alixir_core": {:git, "https://github.com/GreenNerd-Labs/alixir_core.git", "a81b0e898d7c8526bb1efcdb165dfffc9c3aacd6", [branch: "develop"]},
   "certifi": {:hex, :certifi, "2.3.1", "d0f424232390bf47d82da8478022301c561cf6445b5b5fb6a84d49a9e76d2639", [:rebar3], [{:parse_trans, "3.2.0", [hex: :parse_trans, repo: "hexpm", optional: false]}], "hexpm"},
   "combine": {:hex, :combine, "0.10.0", "eff8224eeb56498a2af13011d142c5e7997a80c8f5b97c499f84c841032e429f", [:mix], [], "hexpm"},
   "gettext": {:hex, :gettext, "0.15.0", "40a2b8ce33a80ced7727e36768499fc9286881c43ebafccae6bab731e2b2b8ce", [:mix], [], "hexpm"},
