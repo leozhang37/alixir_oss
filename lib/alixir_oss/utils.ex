@@ -2,7 +2,7 @@ defmodule Alixir.OSS.Utils do
   @default_content_type "application/octet-stream"
 
   defdelegate gmt_now(), to: Alixir.Utils
-  defdelegate canonicalized_parameters(parameters), to: Alixir.Utils
+  defdelegate canonicalize_parameters(parameters), to: Alixir.Utils
 
   def make_signature(
     verb: verb, content_md5: content_md5, content_type: content_type,
@@ -14,7 +14,7 @@ defmodule Alixir.OSS.Utils do
       else
         [
           verb, content_md5, content_type, date_or_expires,
-          canonicalized_parameters(oss_headers), resource
+          canonicalize_parameters(oss_headers), resource
         ]
       end
 
