@@ -29,7 +29,8 @@ defmodule AlixirOss.MixProject do
       {:alixir_core, "~> 0.1.0"},
       {:mime, "~> 1.3.0"},
       {:sweet_xml, "~> 0.6.5"},
-      {:junit_formatter, ">= 0.0.0", only: :test}
+      {:junit_formatter, ">= 0.0.0", only: :test},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 
