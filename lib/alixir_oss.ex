@@ -16,6 +16,7 @@ defmodule Alixir.OSS do
   See `put_object/4` and `delete_object/4` for more details.
   """
 
+  alias Alixir.OSS.FileObject
   alias Alixir.OSS.Operation
 
   @doc """
@@ -25,23 +26,22 @@ defmodule Alixir.OSS do
 
   ## Example
 
-    iex> operation = Alixir.OSS.put_object("foo_bucket", "foo/bar.jpg", File.stream!("test/data/bar.jpg"), "X-OSS-Object-Acl": "public-read")
+    iex> file_object = %Alixir.OSS.FileObject{bucket: "foo_bucket", object_key: "foo/bar.jpg", object: File.stream!("test/data/bar.jpg")}
+    ...> operation = Alixir.OSS.put_object(file_object, "X-OSS-Object-Acl": "public-read")
     ...> with %Alixir.OSS.Operation{http_method: :put, bucket: "foo_bucket", object_key: "foo/bar.jpg",
     ...>   file: %File.Stream{path: "test/data/bar.jpg"}, oss_headers: oss_headers} when is_list(oss_headers) <- operation, do: true
     true
   """
   @spec put_object(
-    String.t(),
-    String.t(),
-    Enumerable.t(),
+    %FileObject{},
     list()
   ) :: %Alixir.OSS.Operation{http_method: :put}
-  def put_object(bucket, object_key, file, oss_headers \\ []) when is_list(oss_headers) do
+  def put_object(%FileObject{bucket: bucket, object_key: object_key, object: object}, oss_headers \\ []) when is_list(oss_headers) do
     %Operation{
       http_method: :put,
       bucket: bucket,
       object_key: object_key,
-      file: file,
+      file: object,
       oss_headers: oss_headers
     }
   end
@@ -53,17 +53,17 @@ defmodule Alixir.OSS do
 
   ## Example
 
-    iex> operation = Alixir.OSS.delete_object("foo_bucket", "foo/bar.jpg")
+    iex> file_object = %Alixir.OSS.FileObject{bucket: "foo_bucket", object_key: "foo/bar.jpg"}
+    ...> operation = Alixir.OSS.delete_object(file_object)
     ...> with %Alixir.OSS.Operation{http_method: :delete, bucket: "foo_bucket", object_key: "foo/bar.jpg",
     ...>   oss_headers: oss_headers} when is_list(oss_headers) <- operation, do: true
     true
   """
   @spec delete_object(
-    String.t(),
-    Enumerable.t(),
+    %FileObject{},
     list()
   ) :: %Alixir.OSS.Operation{http_method: :delete}
-  def delete_object(bucket, object_key, oss_headers \\ []) when is_list(oss_headers) do
+  def delete_object(%FileObject{bucket: bucket, object_key: object_key}, oss_headers \\ []) when is_list(oss_headers) do
     %Operation{
       http_method: :delete,
       bucket: bucket,
