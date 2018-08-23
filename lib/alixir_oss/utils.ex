@@ -27,6 +27,10 @@ defmodule Alixir.OSS.Utils do
     end
   end
 
+  def expires_from(expires, %DateTime{} = time) do
+    expires + (time |> DateTime.to_unix)
+  end
+
   defp canonicalize_parameters(parameters) do
     parameters
     |> Enum.map(fn {key, value} -> "#{key |> to_string() |> String.downcase()}:#{value}" end)

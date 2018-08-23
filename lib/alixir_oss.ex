@@ -16,8 +16,13 @@ defmodule Alixir.OSS do
   See `put_object/4` and `delete_object/4` for more details.
   """
 
+  @valid_http_methods [:get, :put, :delete]
+  @default_expires 5 * 60
+
   alias Alixir.OSS.FileObject
   alias Alixir.OSS.Operation
+  alias Alixir.OSS.Utils
+  alias Alixir.OSS.Env
 
   @doc """
   Put object to OSS. Return an `Alixir.OSS.Operation` struct which
@@ -70,5 +75,47 @@ defmodule Alixir.OSS do
       object_key: object_key,
       oss_headers: oss_headers
     }
+  end
+
+  @doc """
+  Generate a presigned URL, which could be used by other other applications (such as
+  frontend) to operate OSS
+  """
+  @spec presigned_url(
+    atom(),
+    %FileObject{},
+    Keyword.t()
+  ) :: String.t()
+  def presigned_url(http_method, %FileObject{} = file_object, options \\ []) when http_method in @valid_http_methods do
+    content_type = Utils.content_type(file_object.object)
+    expires =
+      options
+      |> Keyword.get(:expires, @default_expires)
+      |> Utils.expires_from(DateTime.utc_now)
+
+    signature = Utils.make_signature(
+      verb: http_method |> to_string() |> String.upcase(),
+      content_md5: nil,
+      content_type: content_type,
+      date_or_expires: expires,
+      oss_headers: [],
+      resources: Path.join(file_object.bucket, file_object.object_key)
+    )
+
+    parameters =
+      %{
+        "Content-Type": content_type,
+        "Signature": signature,
+        "Expires": expires,
+        "OSSAccessKeyId": Env.oss_access_key_id()
+      }
+
+    %URI{
+      scheme: "https",
+      host: file_object.bucket <> "." <> Env.oss_endpoint(),
+      path: "/" <> file_object.object_key,
+      query: URI.encode_query(parameters)
+    }
+    |> URI.to_string()
   end
 end
