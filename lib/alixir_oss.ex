@@ -87,7 +87,13 @@ defmodule Alixir.OSS do
     Keyword.t()
   ) :: String.t()
   def presigned_url(http_method, %FileObject{} = file_object, options \\ []) when http_method in @valid_http_methods do
-    content_type = Utils.content_type(file_object.object_key)
+    content_type =
+      if :get == http_method do
+        nil
+      else
+        Utils.content_type(file_object.object_key)
+      end
+
     expires =
       options
       |> Keyword.get(:expires, @default_expires)
@@ -99,23 +105,31 @@ defmodule Alixir.OSS do
       content_type: content_type,
       date_or_expires: expires,
       oss_headers: [],
-      resource: Path.join(file_object.bucket, file_object.object_key)
+      resource: Path.join(["/", file_object.bucket, file_object.object_key])
     )
 
-    parameters =
+    %URI{
+      scheme: "https",
+      host: file_object.bucket <> "." <> Env.oss_endpoint(),
+      path: "/" <> file_object.object_key,
+      query: http_method |> presigned_url_parameters(content_type, signature, expires) |> URI.encode_query()
+    }
+    |> URI.to_string()
+  end
+
+  defp presigned_url_parameters(:get, _content_type, signature, expires) do
+    %{
+      "Signature": signature,
+      "Expires": expires,
+      "OSSAccessKeyId": Env.oss_access_key_id()
+    }
+  end
+  defp presigned_url_parameters(_, content_type, signature, expires) do
       %{
         "Content-Type": content_type,
         "Signature": signature,
         "Expires": expires,
         "OSSAccessKeyId": Env.oss_access_key_id()
       }
-
-    %URI{
-      scheme: "https",
-      host: file_object.bucket <> "." <> Env.oss_endpoint(),
-      path: "/" <> file_object.object_key,
-      query: URI.encode_query(parameters)
-    }
-    |> URI.to_string()
   end
 end
