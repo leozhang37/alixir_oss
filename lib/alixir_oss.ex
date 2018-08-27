@@ -99,7 +99,7 @@ defmodule Alixir.OSS do
       content_type: content_type,
       date_or_expires: expires,
       oss_headers: [],
-      resources: Path.join(file_object.bucket, file_object.object_key)
+      resource: Path.join(file_object.bucket, file_object.object_key)
     )
 
     parameters =
