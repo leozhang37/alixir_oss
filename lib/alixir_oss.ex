@@ -87,7 +87,7 @@ defmodule Alixir.OSS do
     Keyword.t()
   ) :: String.t()
   def presigned_url(http_method, %FileObject{} = file_object, options \\ []) when http_method in @valid_http_methods do
-    content_type = Utils.content_type(file_object.object)
+    content_type = Utils.content_type(file_object.object_key)
     expires =
       options
       |> Keyword.get(:expires, @default_expires)
