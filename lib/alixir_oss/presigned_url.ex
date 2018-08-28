@@ -38,7 +38,7 @@ defmodule Alixir.OSS.PresignedURL do
       scheme: "https",
       host: file_object.bucket <> "." <> Env.oss_endpoint(),
       path: "/" <> file_object.object_key,
-      query: http_method |> presigned_url_parameters(content_type, signature, expires, callback) |> URI.encode_query()
+      query: http_method |> presigned_url_parameters(signature, expires, callback) |> URI.encode_query()
     }
     |> URI.to_string()
   end
@@ -56,24 +56,22 @@ defmodule Alixir.OSS.PresignedURL do
     |> URI.to_string()
   end
 
-  defp presigned_url_parameters(:get, _content_type, signature, expires, _callback) do
+  defp presigned_url_parameters(:get, signature, expires, _callback) do
     %{
       "Signature": signature,
       "Expires": expires,
       "OSSAccessKeyId": Env.oss_access_key_id()
     }
   end
-  defp presigned_url_parameters(:put, content_type, signature, expires, nil) do
+  defp presigned_url_parameters(:put, signature, expires, nil) do
     %{
-      "Content-Type": content_type,
       "Signature": signature,
       "Expires": expires,
       "OSSAccessKeyId": Env.oss_access_key_id()
     }
   end
-  defp presigned_url_parameters(:put, content_type, signature, expires, callback) do
+  defp presigned_url_parameters(:put, signature, expires, callback) do
     %{
-      "Content-Type": content_type,
       "Signature": signature,
       "Expires": expires,
       "callback": callback,
