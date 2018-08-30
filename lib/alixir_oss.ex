@@ -19,6 +19,7 @@ defmodule Alixir.OSS do
   alias Alixir.OSS.FileObject
   alias Alixir.OSS.Operation
   alias Alixir.OSS.PresignedURL
+  alias Alixir.OSS.PostObjectData
 
   @doc """
   Put object to OSS. Return an `Alixir.OSS.Operation` struct which
@@ -83,4 +84,14 @@ defmodule Alixir.OSS do
     Keyword.t()
   ) :: String.t()
   defdelegate presigned_url(http_method, file_object, options \\ []), to: PresignedURL
+
+  @doc """
+  Generate a presigned URL, which could be used by other other applications (such as
+  frontend) to operate OSS
+  """
+  @spec post_object_data(
+    %FileObject{},
+    Keyword.t()
+  ) :: Map.t()
+  defdelegate post_object_data(file_object, policy_options \\ []), to: PostObjectData
 end

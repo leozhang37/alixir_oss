@@ -1,5 +1,6 @@
 defmodule Alixir.OSS.Utils do
   @default_content_type "application/octet-stream"
+  @iso_8601_extended_format "%FT%TZ"
 
   defdelegate gmt_now(), to: Alixir.Utils
 
@@ -29,6 +30,10 @@ defmodule Alixir.OSS.Utils do
 
   def expires_from(expires, %DateTime{} = time) do
     expires + (time |> DateTime.to_unix)
+  end
+
+  def iso_8601_extended_time(%DateTime{} = time) do
+    Timex.format!(time, @iso_8601_extended_format, :strftime)
   end
 
   defp canonicalize_parameters(parameters) do
