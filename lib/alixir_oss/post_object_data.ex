@@ -11,10 +11,18 @@ defmodule Alixir.OSS.PostObjectData do
     policy =
       policy_options
       |> Keyword.take(@policy_options_keys)
-      |> make_policy(bucket, object_key)
-    signature = Alixir.Utils.sign(policy, Env.oss_access_key_id())
+      |> make_policy(bucket, object_key, content_type)
+
+    signature = Alixir.Utils.sign(policy, Env.oss_access_key_secret())
+    url =
+      %URI{
+        scheme: "https",
+        host: bucket <> "." <> Env.oss_endpoint()
+      }
+      |> URI.to_string()
 
     %{
+      "url": url,
       "OSSAccessKeyId": Alixir.OSS.Env.oss_access_key_id(),
       "key": object_key,
       "Content-Type": content_type,
@@ -23,7 +31,7 @@ defmodule Alixir.OSS.PostObjectData do
     }
   end
 
-  defp make_policy(policy_options, bucket, object_key) do
+  defp make_policy(policy_options, bucket, object_key, content_type) do
     expiration_duration =
       policy_options
       |> Keyword.get(:expiration, @default_expiration)
@@ -37,16 +45,17 @@ defmodule Alixir.OSS.PostObjectData do
 
     %{
       "expiration": expiration,
-      "conditions": make_policy_conditions(policy_options, bucket, object_key)
+      "conditions": make_policy_conditions(policy_options, bucket, object_key, content_type)
     }
     |> encode_policy()
   end
 
-  defp make_policy_conditions(policy_options, bucket, object_key) do
+  defp make_policy_conditions(policy_options, bucket, object_key, content_type) do
     conditions =
       [
         %{"bucket": bucket},
-        %{"key": object_key}
+        %{"key": object_key},
+        %{"Content-Type": content_type}
       ]
 
     case Keyword.get(policy_options, :content_length_range, nil) do
