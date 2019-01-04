@@ -26,7 +26,7 @@ defmodule AlixirOss.MixProject do
 
   defp deps do
     [
-      {:alixir_core, "~> 0.1.3"},
+      {:alixir_core, github: "GreenNerd-Labs/alixir_core", branch: "develop"},
       {:mime, "~> 1.3.0"},
       {:poison, "~> 3.1"},
       {:sweet_xml, "~> 0.6.5"},
