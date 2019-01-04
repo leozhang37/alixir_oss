@@ -94,4 +94,19 @@ defmodule Alixir.OSS do
     Keyword.t()
   ) :: Map.t()
   defdelegate post_object_data(file_object, policy_options \\ []), to: PostObjectData
+
+  @doc """
+  Head an object. Return true if the object exists, or false if it doesn't exist.
+  """
+  @spec head_object(
+    String.t(),
+    String.t()
+  ) :: boolean()
+  def head_object(bucket, key) do
+    %Operation{
+      http_method: :head,
+      bucket: bucket,
+      object_key: key
+    }
+  end
 end
