@@ -106,7 +106,8 @@ defmodule Alixir.OSS do
     %Operation{
       http_method: :head,
       bucket: bucket,
-      object_key: key
+      object_key: key,
+      oss_headers: []
     }
   end
 end
