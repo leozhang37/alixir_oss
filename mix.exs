@@ -26,7 +26,7 @@ defmodule AlixirOss.MixProject do
 
   defp deps do
     [
-      {:alixir_core, git: "https://github.com/leozhang37/alixir_core.git", branch: "develop"},
+      {:alixir_core, git: "https://github.com/leozhang37/alixir_core.git"},
       {:mime, "~> 1.3.0"},
       {:poison, "~> 3.1"},
       {:sweet_xml, "~> 0.6.5"},
