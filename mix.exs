@@ -2,7 +2,7 @@ defmodule AlixirOss.MixProject do
   use Mix.Project
 
   @project_host "https://github.com/GreenNerd-Labs/alixir_oss"
-  @version "0.2.0"
+  @version "0.2.1"
 
   def project do
     [
@@ -26,7 +26,7 @@ defmodule AlixirOss.MixProject do
 
   defp deps do
     [
-      {:alixir_core, git: "https://github.com/leozhang37/alixir_core.git"},
+      {:alixir_core, git: "https://github.com/leozhang37/alixir_core.git", branch: "v0.1.4"},
       {:mime, "~> 1.3.0"},
       {:poison, "~> 3.1"},
       {:sweet_xml, "~> 0.6.5"},
